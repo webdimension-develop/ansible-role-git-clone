@@ -2,10 +2,10 @@
 # defaults file for roles/ansible-role-git-clone
 git_repository_url: "{{ secret.git_clone.git_repository_url }}"
 git_clone_fqdn: "{{ secret.git_clone.fqdn }}"
-git_clone_webserver: "nginx"
-git_clone_user: "nginx"
-git_clone_group: "nginx"
-git_clone_dest: "/usr/share/nginx/html/git_test"
+git_clone_webserver: "httpd"
+git_clone_user: "apache"
+git_clone_group: "apache"
+git_clone_dest: "/var/www/html/project"
 git_clone_document_root: "{{ git_clone_dest }}/fw/laravel9/public"
 git_clone_user_groups:
   nginx:

@@ -72,6 +72,7 @@
   with_dict: "{{ git_clone_users }}"
 
 - name: Check cloned
+  become: true
   stat:
     path: "{{ git_clone_dest }}"
   register: chk_cloned
@@ -79,6 +80,7 @@
   ignore_errors: true
 
 - name: Git clone
+  become: true
   ansible.builtin.git:
     repo: "{{ secret.git_clone.git_repository_url}}"
     dest: "{{ git_clone_dest }}"
@@ -98,11 +100,11 @@
 #  debug:
 #    msg: "{{ git_clone_fqdn }}"
 
-- name: Replace conf configure
+- name: Replace Nginx conf configure
   become: true
   ansible.builtin.template:
     src: templates/nginx.conf.j2
-    dest: "/etc/nginx/conf.d/{{ git_clone_fqdn }}.http.conf"
+    dest: "/etc/nginx/conf.d/{{ git_clone_fqdn }}.conf"
     owner: "{{ git_clone_user }}"
     group: "{{ git_clone_group }}"
     mode: '0644'
@@ -110,13 +112,14 @@
   when:
     - git_clone_webserver == 'nginx'
 
-#- name: Replace conf configure
-#  become: true
-#  ansible.builtin.template:
-#    src: templates/httpd.conf.j2
-#    dest: "/etc/httpd/conf.d/{{ git_clone.fqdn }}.http.conf"
-#    owner: "{{ git_clone_user }}"
-#    group: "{{ git_clone_group }}"
-#    mode: '0644'
-#  notify: Restart nginx
-#  when: git_clone_webserver = 'apache'
+- name: Replace Httpd conf configure
+  become: true
+  ansible.builtin.template:
+    src: templates/httpd.conf.j2
+    dest: "/etc/httpd/conf.d/{{ git_clone_fqdn }}.conf"
+    owner: "{{ git_clone_user }}"
+    group: "{{ git_clone_group }}"
+    mode: '0644'
+  notify: Restart httpd
+  when:
+    - git_clone_webserver == 'httpd'
