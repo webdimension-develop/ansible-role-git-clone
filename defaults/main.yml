@@ -1,6 +1,6 @@
 ---
 # defaults file for roles/ansible-role-git-clone
-git_repository_url: "{{ secret.git_clone.git_repository_url }}"
+git_clone_repository_url: "{{ secret.git_clone.git_repository_url }}"
 git_clone_fqdn: "{{ secret.git_clone.fqdn }}"
 git_clone_webserver: "httpd"
 git_clone_user: "apache"

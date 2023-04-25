@@ -82,7 +82,7 @@
 - name: Git clone
   become: true
   ansible.builtin.git:
-    repo: "{{ secret.git_clone.git_repository_url}}"
+    repo: "{{ secret.git_clone.git_clone_repository_url}}"
     dest: "{{ git_clone_dest }}"
   when: chk_cloned.stat.exists is false
 
