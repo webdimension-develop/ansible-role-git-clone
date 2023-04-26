@@ -7,6 +7,8 @@ git_clone_user: "apache"
 git_clone_group: "apache"
 git_clone_dest: "/var/www/html/project"
 git_clone_document_root: "{{ git_clone_dest }}/fw/laravel9/public"
+git_clone_ssl: true
+git_clone_letsencrypt_email: "{{ secret.git_clone.letsencrypt_email }}"
 git_clone_user_groups:
   nginx:
     name: "{{ git_clone_group }}"

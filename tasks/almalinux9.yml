@@ -82,7 +82,7 @@
 - name: Git clone
   become: true
   ansible.builtin.git:
-    repo: "{{ secret.git_clone.git_clone_repository_url}}"
+    repo: "{{ git_clone_repository_url }}"
     dest: "{{ git_clone_dest }}"
   when: chk_cloned.stat.exists is false
 
@@ -96,15 +96,15 @@
     recurse: true
     mode: "0775"
 
-#- name: debug
-#  debug:
-#    msg: "{{ git_clone_fqdn }}"
+- name: debug
+  debug:
+    msg: "{{ git_clone_fqdn }}"
 
 - name: Replace Nginx conf configure
   become: true
   ansible.builtin.template:
-    src: templates/nginx.conf.j2
-    dest: "/etc/nginx/conf.d/{{ git_clone_fqdn }}.conf"
+    src: templates/nginx_http.conf.j2
+    dest: "/etc/nginx/conf.d/{{ git_clone_fqdn }}_http.conf"
     owner: "{{ git_clone_user }}"
     group: "{{ git_clone_group }}"
     mode: '0644'
@@ -115,11 +115,16 @@
 - name: Replace Httpd conf configure
   become: true
   ansible.builtin.template:
-    src: templates/httpd.conf.j2
-    dest: "/etc/httpd/conf.d/{{ git_clone_fqdn }}.conf"
+    src: templates/httpd_http.conf.j2
+    dest: "/etc/httpd/conf.d/{{ git_clone_fqdn }}_http.conf"
     owner: "{{ git_clone_user }}"
     group: "{{ git_clone_group }}"
     mode: '0644'
   notify: Restart httpd
   when:
     - git_clone_webserver == 'httpd'
+
+- name: Include_tasks
+  include_tasks: "letsencrypt.yml"
+  when:
+    - git_clone_ssl is true
